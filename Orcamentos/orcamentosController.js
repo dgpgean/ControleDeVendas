@@ -227,7 +227,7 @@ router.get('/orcamentos/edit/:id',(req,res)=>{
             funcionario.findAll().then(funcs=>{
                 funcionarios.findOne({where:{orcamentoId:id}}).then(funcsdeOrc=>{
                     
-                    res.render('orcamentos/edit',{products,list:list2,funcs,funcsdeOr})
+                    res.render('orcamentos/edit',{products,list:list2,funcs,funcsdeOrc})
 
                 })
             })

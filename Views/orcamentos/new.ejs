@@ -33,12 +33,13 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col"></th>
+                            <th scope="col">#</th>
                             <th scope="col">Produto</th>
                             <th scope="col">R$</th>
                             <th scope="col">Codigo</th>
                             <th scope="col">Quantidade</th>
                             <th scope="col">Desconto%</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Ações</th>
                         </tr>
                     </thead>
@@ -51,8 +52,8 @@
                                 <tr>
                                     <th scope="row"><%=list.id2%></th>
                                     <td><%=list.name%></td>
-                                    <td><%=list.value - list.descValue%></td>
-                                    <td><%=list.code%></td>
+                                    <td><%=list.value%></td>
+                                    <td><%=list.code%></td>                                  
                                     <td>
                                        
                                         <form action="/orcamento/alteraQuantidade" method="POST" onsubmit="verificaQuantidade(event,this)">
@@ -70,14 +71,14 @@
                                         </form>
                                       
                                     </td>
+                                    <td>R$ <%=(list.value * list.amount)-(list.descValue*list.amount)%></td>
                                     <td>
                                         <form action="/orcamentos/delete/itens" onsubmit="confirmaDelete(event,this)" method="POST">
                                             <button class="btn btn-danger"style="color: aliceblue;">Excluir</button>
                                             <input type="hidden" value="<%=list.id2%>" name="id">
                                         </form>
                                     </td>
-                                </tr>    
-                                <%=list.id%>                         
+                                </tr>                        
                             <%})%>                      
                         <%}%>
                     </tbody>       
@@ -181,18 +182,21 @@
         event.preventDefault()
         let cont = 0
         const btns = []
-        let chave = false
+        let chave = []
         lista.forEach(n=>{
             btns.push(document.querySelector('input#'+n.name))
-            if(btns[cont].value <=0){
+            if(isNaN(btns[cont].value)){
                 window.alert('Quantidade Invalida')
-                chave=false
-            }else{
-                chave = true
+                chave.push(1)
+                btns[cont].value = 1
+            }   
+            else if(btns[cont].value <=0 || btns[cont].value.trim() == ''){
+                window.alert('Quantidade Invalida')
+                chave.push(1)
             }
             cont++
         })
-        if(chave){form.submit()}
+        if(chave.length<=0){form.submit()}
 
 
     }
@@ -206,18 +210,20 @@
         event.preventDefault()
         let cont = 0
         const btns = []
-        let chave = false
+        let chave = []
         lista.forEach(n=>{
             btns.push(document.querySelector('input#desc'+n.name))
-            if(btns[cont].value <=0){
+            if(isNaN(btns[cont].value)){
                 window.alert('Desconto Invalida')
-                chave=false
-            }else{
-                chave = true
+                chave.push(1)
+            }   
+            else if(btns[cont].value <0 || btns[cont].value.trim() == ''){
+                window.alert('Desconto Invalida')
+                chave.push(1)
             }
             cont++
         })
-        if(chave){form.submit()}
+        if(chave.length<=0){form.submit()}
     }
 </script>
 <%-include('../partials/footer')%>
