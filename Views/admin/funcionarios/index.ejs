@@ -1,0 +1,50 @@
+<%-include('../../partials/header.ejs')%>
+<%-include('../../partials/navBarAdmin.ejs')%>
+<body>
+    <div class="container">
+
+        <div class="card" style="text-align: center;">
+            <div class="card-header">
+                <h2>Funcionarios</h2>
+              </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>  
+                            <th scope="col">Funcionarios</th>
+                            <th scope="col">Vendas R$</th>
+                            <th scope="col">Adm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%funcionarios.forEach(funcionario=>{%>   
+                            <tr>
+                                <th scope="row"><%=funcionario.id%></th>
+                                <td><%=funcionario.name%></td>
+                                <td><%=funcionario.sales%> </td>
+                                <td><%=funcionario.acess%></td>
+                                <td>
+                                    <form action="/funcionarios/delete/<%=funcionario.id%>" onsubmit="confirmaDelete(event,this)" method="POST">
+                                        <a class="btn btn-warning"  href="/admin/funcionarios/edit/<%=funcionario.id%>" >Editar</a>
+                                        <button class="btn btn-danger"style="color: aliceblue;">Excluir</button>
+                                    </form>
+                                </td>
+                                </td>
+                            </tr>                      
+                        <%})%>
+                    
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function confirmaDelete(event, form){
+        event.preventDefault()
+        const chave = confirm('Excluir Funcionario?')
+        chave? form.submit():event.preventDefault
+    }
+</script>
+<%-include('../../partials/footer.ejs')%>

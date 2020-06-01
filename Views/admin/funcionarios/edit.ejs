@@ -1,0 +1,70 @@
+<%-include('../../partials/header')%>
+<%-include('../../partials/navBarAdmin')%>
+<%if(funcionarios!=undefined){%>
+<%const funcionarios1 = JSON.stringify(funcionarios)%>
+  <input type="hidden" value="<%=funcionarios1%>" id="funcs">
+  <%}%>
+<body>
+    <div class="container" "> 
+        <div class="card" style="width: 50rem; margin: auto;">
+            <div class="card-header">
+                <h2>Editar Funcionario <%=funcionario.name%></h2>
+            </div>
+            <div class="card body" style="border-width:50px; border-color: white;">
+                <form action="/funcionarios/update" method="POST" onkeyup="liberaBotao()" onsubmit="verificaItem(event,this)">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Nome</label>
+                      <input type="text" value="<%=funcionario.name%>" id="name" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Senha</label>
+                      <input type="password" name="password" class="form-control" id="password">
+                    </div>
+                    <label for="">Acesso como administrador? </label>
+                    <div class="form-group form-check">
+                      <input type="radio" class="form-check-input" id="exampleCheck1" name="adm" value="yes">
+                      <label class="form-check-label" for="exampleCheck1">Sim</label><br>
+                      <input type="radio" class="form-check-input" id="exampleCheck1" name="adm" value="not" checked>
+                      <label class="form-check-label" for="exampleCheck1">Não</label>
+                     <input type="hidden" value="<%=funcionario.name%>" name="nameAtual">
+                     <input type="hidden" value="<%=funcionario.id%>" name="id">
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn" disabled >Atualizar</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+  const n = document.querySelector('input#funcs').value
+  const funcionarios = JSON.parse(n)
+  function liberaBotao(){
+        const password = document.querySelector('input#password')
+        const name = document.querySelector('input#name')
+         if(name.value == '' || password.value == ''){
+            document.querySelector('button#btn').disabled = true
+         }else{
+          document.querySelector('button#btn').disabled = false
+
+         }
+        
+  }
+
+  function verificaItem(event,form){
+    event.preventDefault()
+    const name = document.querySelector('input#name').value
+    const chave= []
+    funcionarios.forEach(func=>{
+      if(func.name == name){
+        chave.push(1)
+      }
+    })
+      if(chave.length>0){
+       confirm('Funcionario ja cadastrado! Deseja continuar?')?form.submit():event.preventDefault()
+      }else{
+        form.submit()
+      }
+
+  }
+</script>
+<%-include('../../partials/footer')%>

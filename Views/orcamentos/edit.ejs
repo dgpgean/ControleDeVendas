@@ -1,0 +1,188 @@
+<%-include('../partials/header')%>
+<%-include('../partials/navBar')%>
+<body>
+    <%=list.length%>
+   <%if(products.length>0){%>
+        <input type="hidden" name="" id="teste" value="<%=JSON.stringify(products)%>">
+    <%}%>
+    <%if(funcsdeOrc!=undefined){%>
+        <%const funcs2 = JSON.stringify(funcs)%>
+        <%const funcs3 = JSON.stringify(funcsdeOrc)%>
+        <input type="hidden" value="<%=funcs3%>" id="funcsdeOrc">
+        <input type="hidden" value="<%=funcs2%>" id="funcs">
+        <%}%>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                
+                <h2 style="text-align: center;">Orçamento</h2>
+                <form action="/orcamentos/procuraItem2"method="POST" onsubmit="verificaItem(event,this)">
+                    <input type="hidden" name="chave" value="<%=list[0].orcamentoId%>">
+                    <small id="emailHelp" class="form-text text-muted">Nome ou Codigo do produto.</small>
+                    <input type="text" name="name" id="nameOrCode" onkeyup="liberaBotao()">
+                    <button  class="btn btn-success" id="ok" onclick="" disabled> Ok</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Produto</th>
+                            <th scope="col">R$</th>
+                            <th scope="col">Codigo</th>
+                            <th scope="col">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%if(list.length>0 && list!= null){%>
+                            <input type="hidden" id="teste" value="<%list[0].name%>">
+                            <%let cont =0 %>
+                            <%list.forEach(list=>{%>   
+                                <%cont++%> 
+                                <tr>
+                                    <th scope="row"><%=list.id2%></th>
+                                    <td><%=list.name%></td>
+                                    <td><%=list.value%></td>
+                                    <td><%=list.code%></td>
+                                    <td>
+                                        <form action="/orcamento/alteraQuantidade2" method="POST" onsubmit="quantidade(event,this)">
+                                            <input type="text" name="quant" id="quant" value="<%=list.amount%>">
+                                            <button style="display: none;" class="btn btn-success"  onclick=""> Ok</button>
+                                            <input type="hidden" name="id" value="<%=list.id2%>">
+                                            <input type="hidden" name="id2" value="<%=list.orcamentoId%>">
+                                        </form>
+
+                                    </td>
+                                    <td>
+                                        <form action="/orcamentos/delete/itens2" onsubmit="confirmaDelete(event,this)" method="POST">
+                                            <button class="btn btn-danger"style="color: aliceblue;">Excluir</button>
+                                            <input type="hidden" name="id2" value="<%=list.orcamentoId%>">
+                                            <input type="hidden" value="<%=list.id2%>" name="id">
+                                        </form>
+                                    </td>
+                                </tr>                             
+                            <%})%>                      
+                        <%}%>
+                    </tbody>       
+                </table>               
+                <%if(list.length>0){%>
+                    <form action="/orcamentos/update" method="POST" onsubmit="verificaFunc(event,this)">
+                        <input type="text" name="func" value="<%=funcsdeOrc.name%>" class="form-contol" id="funcionario" onkeyup="liberaBotaoFunc()" >
+                        <input type="hidden" value="<%=list[0].orcamentoId%>" name="id">
+                        <button class="btn btn-success" id="btnFunc" disabled>Finalizar</button> 
+                    </form>
+                    
+                    <% let total = 0%>
+                    <%list.forEach(n=>{%>
+                        <% total+= n.value * n.amount%>
+                        
+                    <%})%>
+                    <h3 id="total">
+                        Total R$ <%=total.toFixed(2)%>
+                    </h3>
+                <%}%>
+               
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    let products = JSON.parse(document.querySelector('input#teste').value) 
+    let func = JSON.parse(document.querySelector('input#funcs').value) 
+
+    
+
+    function verificaItem(event,form){
+        event.preventDefault()
+        const nameOrCode = document.querySelector('input#nameOrCode').value
+        const code = parseInt(nameOrCode)
+        const chave = []
+         if(products!= null && products != undefined){
+             if(isNaN(code)){
+                products.forEach(x=>{
+                    if(x.name == nameOrCode){
+                        chave.push(1)
+                    }
+                })
+             }else{
+                products.forEach(x=>{
+                    if(x.code == nameOrCode){
+                        chave.push(1)
+                    }
+                })
+             }
+           
+            if(chave.length>0){
+                form.submit()
+            }else{
+                window.alert('Produto não encontrado!')
+            }
+         }
+    }
+    
+    function verificaFunc(event,form){
+        event.preventDefault()
+        const func0 = document.querySelector('input#funcionario').value
+        const chave = []
+        func.forEach(func=>{
+            if(func.name == func0){
+                chave.push(1)
+            }
+        })
+        if(chave.length == 0){
+            window.alert('Funcionario não encontrado') 
+        }else{
+            form.submit()
+        }
+    }   
+
+    function liberaBotaoFunc(){
+        const func1 = document.querySelector('input#funcionario').value
+
+        if(func1 == ''|| func1 == null){
+            document.querySelector('button#btnFunc').disabled = true
+        }else{
+            document.querySelector('button#btnFunc').disabled = false
+        }
+
+    }
+
+    function liberaBotao(){
+        const nameOrCode= document.querySelector('input#nameOrCode').value
+        if(nameOrCode ==null || nameOrCode ==''){
+            document.querySelector('button#ok').disabled = true
+        }else{
+            document.querySelector('button#ok').disabled = false
+        }   
+    }
+
+    function quantidade(events,form){
+        event.preventDefault()
+        const quant = document.querySelector('input#quant')
+
+        if(isNaN(quant.value)){
+            window.alert('Quantidade Invalida')
+            quant.value = 1
+        }else{           
+            if(quant.value == '' || quant.value <= 0){
+                window.alert('Quantidade Invalida')
+                quant.value = 1
+            }else{
+                form.submit()
+                
+            }
+        }
+    }
+
+    function confirmaDelete(event,form){
+        event.preventDefault()
+        const chave = confirm('Excluir produto?')
+        chave? form.submit():event.preventDefault
+    }
+
+    
+</script>
+<%-include('../partials/footer')%>

@@ -1,0 +1,89 @@
+<%-include('../../partials/header.ejs')%>
+<%-include('../../partials/navBarAdmin.ejs')%>
+<%if(products!=undefined){%>
+  <%const products2 = JSON.stringify(products)%>
+  <input type="hidden" value="<%=products2%>" id="product">
+  <%}%>
+<body>
+    <div class="container">
+        <div class="card">
+          <div class="card-header">
+            <h2>Editar <%=product.name%></h2>
+          </div>
+            <div class="card-body">
+                <form method="POST" action="/Produto/update" onkeyup="liberaBotao()" onsubmit="verificaItem(event,this)">
+                    <div class="form-group">
+                      <label for="formGroupExampleInput">Nome do produto</label>
+                      <input type="text" value="<%=product.name%>" id="name" name="name" class="form-control" id="formGroupExampleInput" placeholder="Digite o nome do produto">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput2">Valor R$</label>
+                      <input type="text" id="value" name="value" value="<%=product.value%>" class="form-control" id="formGroupExampleInput2" placeholder="Digite o valor do produto">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Quantidade</label>
+                        <input type="number" id="amount" name="amount" value="<%=product.amount%>" class="form-control" id="formGroupExampleInput2" placeholder="Digite a quantidade do produtor">
+                      </div>
+                      <div class="form-group">
+                        <label for="formGroupExampleInput2">Codigo</label>
+                        <input type="number" id="code" name="code" value="<%=product.code%>" class="form-control" id="formGroupExampleInput2" placeholder="Digite o codigo do produtor">
+                      </div>
+                      <input type="hidden" value="<%=product.name%>" name="nameAtual">
+                      <input type="hidden" value="<%=product.code%>" name="codeAtual">
+                      <input type="hidden" value="<%=product.id%>" name="id">
+                      <button class="btn btn-success" id="btn">Atualizar</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+   
+</body>
+<script>
+  const n = document.querySelector('input#product').value
+  const products = JSON.parse(n)
+  function values(){
+    lista = []
+    lista.push(document.querySelector('input#name').value)
+    lista.push(document.querySelector('input#value').value)
+    lista.push(document.querySelector('input#amount').value)
+    lista.push(document.querySelector('input#code').value)
+    return lista
+  }
+  function liberaBotao(){
+     const values1 = values()
+    
+    if(values1[0]!=''&& values1[1]!= ''){
+      if(values1[2]!='' && values1[3]!=''){
+        document.querySelector('button#btn').disabled = false
+      }else{
+        document.querySelector('button#btn').disabled = true
+      }
+    }else{
+      document.querySelector('button#btn').disabled = true     
+    }
+  }
+
+  function verificaItem(event,form){
+    event.preventDefault()
+    const values1 = values()
+    let chave = []
+
+    products.forEach(product=>{
+      if(product.name == values1[0] || product.code == values1[3]){
+        chave.push(1)
+      }
+    })
+    if(chave.length>0){
+      window.alert('Nome ou codigo já existentes!')
+      if(confirm('Deseja continuar?')){
+        form.submit()
+
+      }
+
+    }else{  
+      form.submit()
+    }
+
+  }
+</script>
+<%-include('../../partials/footer.ejs')%>

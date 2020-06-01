@@ -1,0 +1,58 @@
+<%-include('../partials/header.ejs')%>
+<%-include('../partials/navBar.ejs')%>
+<body>
+    <%=products.length%>
+    <div class="container">
+
+        <div class="card" style="text-align: center;">
+            <div class="card-header">
+                <h2>Orçamentos</h2>
+              </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Numero</th>
+                            <th scope="col">Quantidade de itens</th>
+                            <th scope="col">R$</th>
+                            <th scope="col">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                        <%orcamentos.forEach(orcamento=>{%>
+                            <tr>
+                                    <%let cont = 0%>
+                                    <% const list = products.filter(n=> n.orcamentoId == orcamento.id)%>
+                                    <%if(list.length>=1){%>
+                                            <%cont = list.length%>                             
+                                    <%}%>
+                                    <td><%=orcamento.id%></td>
+                                    <td><%=cont%></td>
+                                    <td><%=orcamento.value%></td>
+                                    <td>
+                                        <form action="/orcamentos/edit/<%=orcamento.id%>" style="display: inline;">
+                                            <button class="btn btn-warning">Editar</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action="/orcamentos/delete" method="POST">
+                                            <button class="btn btn-danger">Excluir</button>
+                                            <input type="hidden" name="id" value="<%=orcamento.id%>">
+                                        </form>
+                                    </td>
+                            </tr>
+                        <%})%>
+                     </tbody>     
+                </table>     
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function confirmaDelete(){
+        const chave = confirm('Excluir Funcionario?')
+        chave? form.submit():event.preventDefault
+    }
+</script>
+<%-include('../partials/footer.ejs')%>

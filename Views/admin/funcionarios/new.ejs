@@ -1,0 +1,69 @@
+<%-include('../../partials/header')%>
+<%-include('../../partials/navBarAdmin')%>
+
+<%if(funcionarios!=undefined){%>
+<%const funcionarios1 = JSON.stringify(funcionarios)%>
+  <input type="hidden" value="<%=funcionarios1%>" id="funcs">
+<%}%>
+<body>
+    <div class="container"> 
+        <div class="card" style="width: 50rem; margin: auto;">
+            <div class="card-header">
+                <h2>Novo funcionario</h2>
+            </div>
+            <div class="card body" style="border-width:50px; border-color: white;">
+                <form action="/funcionarios/save" method="POST" onsubmit="verificaItem(event,this)"  onkeyup="liberaBotao()">
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Nome</label>
+                      <input type="text" name="name" id="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    </div>
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Senha</label>
+                      <input type="password" name="password" id="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <label for="">Acesso como administrador? </label>
+                    <div class="form-group form-check">
+                      <input type="radio" class="form-check-input" id="exampleCheck1" name="adm" value="yes">
+                      <label class="form-check-label" for="exampleCheck1">Sim</label><br>
+                      <input type="radio" class="form-check-input" id="exampleCheck1" name="adm" value="not" checked>
+                      <label class="form-check-label" for="exampleCheck1">Não</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="btn" disabled>Submit</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+  const n = document.querySelector('input#funcs').value
+  const funcionarios = JSON.parse(n)
+  function liberaBotao(){
+        const password = document.querySelector('input#password').value
+        const name = document.querySelector('input#name').value
+
+          if(name == '' || password == ''){
+            document.querySelector('button#btn').disabled = true
+          }else{
+            document.querySelector('button#btn').disabled = false
+
+          }
+  }
+
+  function verificaItem(event,form){
+    event.preventDefault()
+    const name = document.querySelector('input#name').value
+    const chave= []
+    funcionarios.forEach(func=>{
+      if(func.name == name){
+        chave.push(1)
+      }
+    })
+      if(chave.length>0){
+       confirm('Funcionario ja cadastrado! Deseja continuar?')?form.submit():event.preventDefault()
+      }else{
+        form.submit()
+      }
+
+  }
+</script>
+<%-include('../../partials/footer')%>

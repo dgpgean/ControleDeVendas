@@ -1,0 +1,84 @@
+<%-include('../../partials/header.ejs')%>
+<%-include('../../partials/navBarAdmin.ejs')%>
+<%if(products!=undefined){%>
+  <%const products2 = JSON.stringify(products)%>
+  <input type="hidden" value="<%=products2%>" id="product">
+  <%}%>
+  
+<body>
+    <div class="container">
+
+        <div class="card">
+          <div class="card-header">
+            <h2>Novo produto</h2>
+          </div>
+            <div class="card-body">
+                <form method="POST" action="/Produto/save" onsubmit="verificaItem(event,this)"  onkeyup="liberaBotao()" >
+                    <div class="form-group">
+                      <label for="formGroupExampleInput">Nome do produto</label>
+                      <input type="text" name="name" id="name" class="form-control"placeholder="Digite o nome do produto">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput2">Valor R$</label>
+                      <input type="text" name="value" id="value"  class="form-control" placeholder="Digite o valor do produto">
+                    </div>
+                    <div class="form-group">
+                        <label for="formGroupExampleInput2">Quantidade</label>
+                        <input type="number" name="amount" id="amount" class="form-control"  placeholder="Digite a quantidade do produtor">
+                      </div>
+                      <div class="form-group">
+                        <label for="formGroupExampleInput2">Codigo</label>
+                        <input type="number" name="code" id="code" class="form-control"  placeholder="Digite o codigo do produtor">
+                      </div>
+                      <button class="btn btn-success" id="btn" disabled>Cadastrar</button>
+                  </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+  const n = document.querySelector('input#product').value
+  const products = JSON.parse(n)
+  function values(){
+    lista = []
+    lista.push(document.querySelector('input#name').value)
+    lista.push(document.querySelector('input#value').value)
+    lista.push(document.querySelector('input#amount').value)
+    lista.push(document.querySelector('input#code').value)
+    return lista
+  }
+  function liberaBotao(){
+     const values1 = values()
+    
+    if(values1[0]!=''&& values1[1]!= ''){
+      if(values1[2]!='' && values1[3]!=''){
+        document.querySelector('button#btn').disabled = false
+      }else{
+        document.querySelector('button#btn').disabled = true
+      }
+    }else{
+      document.querySelector('button#btn').disabled = true     
+    }
+  }
+
+  function verificaItem(event,form){
+    event.preventDefault()
+    const values1 = values()
+    let chave = []
+
+    products.forEach(product=>{
+      if(product.name == values1[0] || product.code == values1[3]){
+        chave.push(1)
+      }
+    })
+    if(chave.length>0){
+      window.alert('Nome ou codigo já existentes!')
+
+    }else{  
+      form.submit()
+    }
+
+  }
+</script>
+<%-include('../../partials/footer.ejs')%>
+ 

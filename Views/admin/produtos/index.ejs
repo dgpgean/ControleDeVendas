@@ -1,0 +1,53 @@
+<%-include('../../partials/header.ejs')%>
+<%-include('../../partials/navBarAdmin.ejs')%>
+<body>
+    <div class="container">
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Produtos</h2>
+              </div>
+            <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>  
+                        <th scope="col">Produto</th>
+                        <th scope="col">R$</th>
+                        <th scope="col">Codigo</th>
+                        <th scope="col">Quantidade</th>
+                    </tr>
+                </thead>
+            <tbody>
+                <%products.forEach(product=>{%>   
+                    <tr>
+                        <th scope="row"><%=product.id%></th>
+                        <td><%=product.name%></td>
+                        <td><%=product.value%></td>
+                        <td><%=product.code%></td>
+                        <td><%=product.amount%></td>
+                        <td>
+                        <form action="/Produto/delete/<%=product.id%>" onsubmit="confirmaDelete(event,this)" method="POST">
+                            <a class="btn btn-warning"  href="/admin/produtos/edit/<%=product.id%>" >Editar</a>
+                            <button class="btn btn-danger"style="color: aliceblue;">Excluir</button>
+                            <input type="hidden" value="product.id" name="id">
+                        </form>
+                        </td>
+                      </tr>
+                      
+                <%})%>
+            
+            </tbody>
+          </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    function confirmaDelete(event,form){
+        event.preventDefault()
+        const chave = confirm('Excluir produto?')
+        chave? form.submit():event.preventDefault
+    }
+</script>
+<%-include('../../partials/footer.ejs')%>
