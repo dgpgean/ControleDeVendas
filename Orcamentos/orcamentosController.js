@@ -75,15 +75,14 @@ router.post('/orcamentos/save',(req,res)=>{
 router.post('/orcamentos/procuraItem',(req,res)=>{
     const nome = req.body.name
     let cont = 0
-    
+    let chave = false
 
     if(isNaN(nome)){
         Produto.findOne({where:{name:nome}}).then(product=>{
             const product1 = product
             product1.amount = 1
             product.descValue =0
-            product.descPorc =0
-            let chave = false
+            product.descPorc =0 
             if(list.length>0){
                 list.forEach(z=>{
                     if(z.name == nome){
@@ -91,7 +90,7 @@ router.post('/orcamentos/procuraItem',(req,res)=>{
                         chave = true
                     }
                 })
-                if(!chave){list.push(1)}
+                if(!chave){list.push(product1)}
             }else{
                 list.push(product1)
             }
@@ -112,10 +111,10 @@ router.post('/orcamentos/procuraItem',(req,res)=>{
                 list.forEach(z=>{
                     if(z.code == nome){
                         z.amount++
-                    }else{
-                        list.push(product1)
+                        chave = true
                     }
                 })
+                if(!chave){list.push(product1)}
             }else{
                 list.push(product1)
             }

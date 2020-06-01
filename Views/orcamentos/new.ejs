@@ -64,7 +64,7 @@
                                     </td>
                                     <td>
                                         <form action="/orcamento/fixaDados" method="POST" onsubmit="verificaDesconto(event,this)">
-                                            <input type="text" name="desc" id="desc" value="<%=list.descPorc%>">
+                                            <input type="text" name="desc" id="desc<%=list.name%>" value="<%=list.descPorc%>">
                                             <button style="display: none;" class="btn btn-success" id="" onclick=""> Ok</button>
                                             <input type="hidden" name="id" value="<%=list.id2%>" id="">
                                         </form>
@@ -178,9 +178,23 @@
     }
 
     function verificaQuantidade(event,form){
-        const teste = document.querySelector()
-        window.alert(teste.value)
-     
+        event.preventDefault()
+        let cont = 0
+        const btns = []
+        let chave = false
+        lista.forEach(n=>{
+            btns.push(document.querySelector('input#'+n.name))
+            if(btns[cont].value <=0){
+                window.alert('Quantidade Invalida')
+                chave=false
+            }else{
+                chave = true
+            }
+            cont++
+        })
+        if(chave){form.submit()}
+
+
     }
     
     function teste(n){
@@ -189,22 +203,21 @@
 
     function verificaDesconto(events,form){
 
-
         event.preventDefault()
-        const desc = document.querySelector('input#desc')
-
-        if(isNaN(desc.value)){
-            window.alert('Desconto invalido')
-            desc.value = 0
-        }else{           
-            if(desc.value == '' || desc.value < 0){
-                window.alert('Desconto invalido')
-                desc.value = 0
+        let cont = 0
+        const btns = []
+        let chave = false
+        lista.forEach(n=>{
+            btns.push(document.querySelector('input#desc'+n.name))
+            if(btns[cont].value <=0){
+                window.alert('Desconto Invalida')
+                chave=false
             }else{
-                form.submit()
-                
+                chave = true
             }
-        }
+            cont++
+        })
+        if(chave){form.submit()}
     }
 </script>
 <%-include('../partials/footer')%>
