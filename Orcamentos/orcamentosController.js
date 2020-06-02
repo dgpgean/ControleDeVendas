@@ -41,10 +41,10 @@ router.get('/orcamentos/new',(req,res)=>{
 // salva orçamentos
 router.post('/orcamentos/save',(req,res)=>{
     const func = req.body.func
+    const total = req.body.total
     const list3 = []
     list3.push(...list)
     list =  [] 
-    let cont = 0
     let contId = {value:1}
   
     idValue.findOne({where:{id:1}}).then(id=>{
@@ -60,12 +60,9 @@ router.post('/orcamentos/save',(req,res)=>{
                 orcamentoId:id.value
             })
         })
-        funcionarios.create({name:func,sales:cont,orcamentoId:id.value})
+        funcionarios.create({name:func,sales:total,orcamentoId:id.value})
     })
-    list3.forEach(product=>{
-        cont+= product.value
-    })
-    orcamentos.create({value:cont}).then(()=>{})
+    orcamentos.create({value:total}).then(()=>{})
     
     res.redirect('/orcamentos')
     

@@ -1,0 +1,65 @@
+<%-include('../../partials/header')%>
+<%-include('../../partials/navBarAdmin')%>
+
+<%if(clients!= undefined){%>
+    <% let clientes = JSON.stringify(clients)%>
+    <input type="hidden" id="clients" value="<$=clientes%>">
+<%}%>
+<hr>
+<div class="container">
+    <form style="width: 50rem; margin: auto;" onkeyup="liberaBotao()">
+        <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Nome</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Email</label>
+            <input type="email" class="form-control" id="mail">
+        </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+            <label for="inputEmail4">CPF</label>
+            <input type="number" class="form-control" id="cpf">
+            </div>
+            <div class="form-group col-md-6">
+            <label for="inputPassword4">Telefone</label>
+            <input type="number" class="form-control" id="fone">
+            </div>
+        </div>
+    
+        
+        <button type="submit" id="btn" class="btn btn-primary" disabled>Cadastrar</button>
+    </form>
+</div>
+  <script>
+        const clientes = JSON.parse(document.querySelector('input#clients'))
+        const name = document.querySelector('input#name').value
+        const mail = document.querySelector('input#mail')
+        const cpf = document.querySelector('input#cpf')
+        const fone = document.querySelector('input#fone')
+        const values = [name,mail,cpf,fone]
+
+        
+        function verificaCliente(event,form){
+            event.preventDefault()
+            const chave = []
+            clientes.forEach(z=>{
+                if(values[0].value == z.name){
+                    confirm('Nome ja existete! Deseja continuar?')?chave=[]:chave.push(1)
+                }
+                else if(values[2].value == z.cpf){
+                    window.alert('Cpf já cadastrado')
+                    chave.push(1)
+                }
+            })
+            if(chave){form.submit()}
+        }
+
+        function liberaBotao(){
+         window.alert('hhjk')
+        }
+
+  </script>
+<%-include('../../partials/footer.ejs')%>

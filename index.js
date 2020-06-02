@@ -8,6 +8,7 @@ const ProdutoDeOrc = require('./ProdutosDeOrc/produtos')
 const funcionarios = require('./Funcionarios/funcionarios')
 const funcionariosDeOrc = require('./FuncionarioDeOrc/funcionario')
 const orcamnetos = require('./Orcamentos/orcamento')
+const clients = require('./Clients/Cliente')
 const idValue = require('./id/id')
 
 
@@ -15,6 +16,7 @@ const NotaController = require('./Notas/notraController')
 const ProdutoController = require('./Produto/produtoController')
 const FuncController = require('./Funcionarios/funcController')
 const orcamentoContoller = require('./Orcamentos/orcamentosController')
+const ClientController = require('./Clients/ClienteController')
 
 
 // dados dos formularios
@@ -26,6 +28,7 @@ app.use(express.urlencoded({extended:true}))
 app.use('/',ProdutoController)
 app.use('/',FuncController)
 app.use('/',orcamentoContoller)
+app.use('/',ClientController)
 
 //conexao com o banco
 connection.authenticate().then(()=>{
